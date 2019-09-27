@@ -54,7 +54,7 @@ systemctl enable nginx;
 
 sed -i 's/\/usr\/share\/nginx\/html/\/home\/todo-app\/app\/public/g' /etc/nginx/nginx.conf;
 
-sed -i 's/server { $/server { index index.html; location \/api\/todos { proxy_pass http:\/\/localhost:8080; }/' /etc/nginx/nginx.conf;
+sed -i 's/server { ?$/server { index index.html; location \/api\/todos { proxy_pass http:\/\/localhost:8080; }/' /etc/nginx/nginx.conf;
 
 yum install jq;
 
