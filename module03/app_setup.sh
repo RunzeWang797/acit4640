@@ -13,8 +13,8 @@ chmod 600 ~admin/.ssh/authorized_keys;
 
 sed -r -i 's/^(%wheel\s+ALL=\(ALL\)\s+)(ALL)$/\1NOPASSWD: ALL/' /etc/sudoers;
 
-yum install epel-release vim git tcpdump curl net-tools bzip2;
-yum update;
+yum install epel-release vim git tcpdump curl net-tools bzip2 -y;
+yum update -y;
 
 #iptables -A INPUT -p tcp -m tcp -m multiport ! --dports 22,80,443 -j DROP;
 
@@ -26,9 +26,9 @@ sed -r -i 's/SELINUX=(enforcing|disabled)/SELINUX=permissive/' /etc/selinux/conf
 
 useradd -m -r todo-app && passwd -l todo-app;
 
-yum install nodejs npm;
+yum install nodejs npm -y;
 
-yum install mongodb-server;
+yum install mongodb-server -y;
 
 systemctl enable mongod && systemctl start mongod;
 
