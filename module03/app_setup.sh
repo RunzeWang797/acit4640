@@ -22,6 +22,8 @@ firewall-cmd --zone=public --add-service=http;
 firewall-cmd --zone=public --add-service=ssh;
 firewall-cmd --zone=public --add-service=https;
 
+setenforce 0;
+
 sed -r -i 's/SELINUX=(enforcing|disabled)/SELINUX=permissive/' /etc/selinux/config;
 
 useradd -m -r todo-app && passwd -l todo-app;
@@ -56,7 +58,7 @@ sed -i 's/\/usr\/share\/nginx\/html/\/home\/todo-app\/app\/public/g' /etc/nginx/
 
 sed -i 's/server { \{0,1\}$/server { index index.html; location \/api\/todos { proxy_pass http:\/\/localhost:8080; }/' /etc/nginx/nginx.conf;
 
-yum install jq;
+yum install jq -y;
 
 echo Checking locally:
 
@@ -86,6 +88,12 @@ systemctl daemon-reload;
 systemctl enable todoapp;
 
 systemctl start todoapp;
+
+systemctl start mongod;
+
+systemctl start nginx;
+
+setsebool httpd_read_user_content 1;
 
 echo Checking if Todo-app is running:
 
