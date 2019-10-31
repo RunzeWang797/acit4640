@@ -8,7 +8,7 @@ PXE_NAME="PXE_4640"
 VM_NAME="VM_ACIT4640"
 NAT_NAME="net_4640"
 
-vbmg () { /mnt/c/Program\ Files/Oracle/VirtualBox/VBoxManage.exe "$@"; }
+vbmg () { VBoxManage.exe "$@"; }
 
 vbmg unregistervm --delete $VM_NAME
 vbmg natnetwork remove --netname $NAT_NAME
@@ -55,7 +55,7 @@ copy_files_to_pxe(){
     echo "COPYING file"
     	ssh -i acit_admin_id_rsa -p 50222 admin@localhost sudo chmod a+rx /var/www/lighttpd
         scp -i acit_admin_id_rsa -P 50222 admin@localhost app_setup.sh admin@localhost:/var/www/lighttpd
-	scp -i acit_admin_id_rsa -P 50222 admin@localhost vm_setup.sh admin@localhost:/var/www/lighttpd
+#	scp -i acit_admin_id_rsa -P 50222 admin@localhost vm_setup.sh admin@localhost:/var/www/lighttpd
 	scp -i acit_admin_id_rsa -P 50222 admin@localhost ks.cfg admin@localhost:/var/www/lighttpd
 }
 
