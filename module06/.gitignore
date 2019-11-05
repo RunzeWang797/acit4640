@@ -1,0 +1,6 @@
+/.vagrant
+/isos
+/output
+/packer_cache
+/base_4640.box
+/packer.exe
