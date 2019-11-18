@@ -1,0 +1,137 @@
+---
+- hosts: todoapp
+  tasks:
+    # - name: Enable firewalld
+      # become: yes
+      # service: name=firewalld state=started enabled=yes
+    # - name: Allow http/https/ssh
+      # become: yes
+      # command: firewall-cmd --zone=public --permanent --add-service=http --add-service=https --add-service=ssh
+    - name: Open firewall for HTTP
+      become: yes
+      firewalld:
+          service: http
+          permanent: yes
+          state: enabled
+          immediate: yes
+    # - firewalld:
+        # become: yes
+        # service: http
+        # permanent: yes
+        # state: enabled
+    # - firewalld:
+        # become: yes
+        # service: ssh
+        # permanent: yes
+        # state: enabled
+    - name: Install Nginx
+      become: yes
+      package:
+          name: nginx
+          state: present
+    - name: Copy Nginx.conf
+      become: yes
+      copy:
+          src: "../files/nginx.conf"
+          dest: "/etc/nginx"
+          owner: admin
+          mode: 0755
+    - name: Start Nginx Service
+      become: yes
+      service:
+          name: nginx
+          state: started
+    - name: Start MongoDB Service
+      become: yes
+      service:
+          name: mongod
+          state: started
+    - name: Install MongoDB server
+      become: yes
+      package:
+          name: mongodb-server
+          state: present
+    - name: Install NodeJS
+      become: yes
+      package:
+          name: nodejs
+          state: present
+    - name: Install Git
+      become: yes
+      package:
+          name: git
+          state: present
+    - name: Create todoapp User
+      become: yes
+      user:
+          name: todo-app
+          create_home: True
+          group: admin
+    - name: Chown to Home Directory
+      become: yes
+      file:
+          path: /home/todo-app
+          state: directory
+          recurse: yes
+          owner: admin
+          group: admin
+          mode: 0755
+    - name: Disable selinux
+      become: yes
+      selinux:
+          state: disabled
+    - name: Create /home/todo-app/app Directory
+      become: yes
+      file:
+          path: /home/todo-app/app
+          state: directory
+    - name: Clone Todo App Repository
+      become: yes
+      git:
+          repo: 'https://github.com/timoguic/ACIT4640-todo-app.git'
+          dest: /home/todo-app/app
+          force: yes
+    - name: Copy database.js
+      become: yes
+      copy: 
+          src: "../files/database.js"
+          dest: "/home/todo-app/app/config/database.js"
+          owner: admin
+          mode: 0755
+    - name: Copy todoapp.service
+      become: yes
+      copy:
+          src: "../files/todoapp.service"
+          dest: "/etc/systemd/system"
+          owner: admin
+          mode: 0755
+    - name: Install all node packages.
+      become: yes
+      npm:
+          path: /home/todo-app/app
+          state: present
+    # - name: Update All Packages
+      # become: yes
+      # yum:
+          # name: "*"
+          # state: latest
+    - name: Manage MongoDB
+      become: yes
+      systemd:
+          name: mongod
+          enabled: yes
+    - name: Manage Nginx
+      become: yes
+      systemd:
+          name: nginx
+          enabled: yes
+    - name: Manage todoapp
+      become: yes
+      systemd:
+          name: todoapp
+          enabled: yes
+    - name: Start Todoapp Service
+      become: yes
+      service:
+          name: todoapp
+          state: started
