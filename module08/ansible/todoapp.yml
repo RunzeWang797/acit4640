@@ -1,0 +1,8 @@
+---
+- hosts: todoapp
+  vars:
+    http_port: 8080
+    user: "todo-app"
+  roles:
+    - role: base
+    - role: todoapp

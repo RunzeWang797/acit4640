@@ -1,0 +1,30 @@
+---
+- name: Open firewall for HTTP
+  become: yes
+  firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes
+- name: Install Nginx
+  become: yes
+  package:
+      name: nginx
+      state: present
+- name: Copy Nginx.conf in a TEMPLATE FORM
+  become: yes
+  template:
+      src: "nginx_conf.j2"
+      dest: "/etc/nginx/nginx.conf"
+      owner: admin
+      mode: 0755
+- name: Start Nginx Service
+  become: yes
+  service:
+      name: nginx
+      state: started
+- name: Manage Nginx
+  become: yes
+  systemd:
+      name: nginx
+      enabled: yes

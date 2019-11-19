@@ -1,0 +1,11 @@
+/.vagrant
+/isos
+/output
+/packer_cache
+/base_4640.box
+/packer.exe
+/ansible_4640.box
+/ansible_4640.json
+/packer.exe
+/packer_cache
+/vagrant.sh

@@ -1,0 +1,61 @@
+---
+- name: Install Git
+  become: yes
+  package:
+      name: git
+      state: present
+- name: Create todoapp User
+  become: yes
+  user:
+      name: todo-app
+      create_home: True
+      group: admin
+- name: Chown to Home Directory
+  become: yes
+  file:
+      path: /home/todo-app
+      state: directory
+      recurse: yes
+      owner: admin
+      group: admin
+      mode: 0755
+- name: Create /home/todo-app/app Directory
+  become: yes
+  file:
+      path: /home/todo-app/app
+      state: directory
+- name: Clone Todo App Repository
+  become: yes
+  git:
+      repo: 'https://github.com/timoguic/ACIT4640-todo-app.git'
+      dest: /home/todo-app/app
+      force: yes
+- name: Copy database.js
+  become: yes
+  copy: 
+      src: "../files/database.js"
+      dest: "/home/todo-app/app/config/database.js"
+      owner: admin
+      mode: 0755
+- name: Copy todoapp.service in a TEMPLATE FORM
+  become: yes
+  template:
+      src: "todoapp_service.j2"
+      dest: "/etc/systemd/system/todoapp.service"
+      owner: admin
+      mode: 0755
+- name: Install all node packages.
+  become: yes
+  npm:
+      path: /home/todo-app/app
+      state: present
+- name: Manage todoapp
+  become: yes
+  systemd:
+      name: todoapp
+      enabled: yes
+- name: Start Todoapp Service
+  become: yes
+  service:
+      name: todoapp
+      state: started
