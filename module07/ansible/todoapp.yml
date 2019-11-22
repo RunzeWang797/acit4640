@@ -41,16 +41,16 @@
       service:
           name: nginx
           state: started
-    - name: Start MongoDB Service
-      become: yes
-      service:
-          name: mongod
-          state: started
     - name: Install MongoDB server
       become: yes
       package:
           name: mongodb-server
           state: present
+    - name: Start MongoDB Service
+      become: yes
+      service:
+          name: mongod
+          state: started
     - name: Install NodeJS
       become: yes
       package:
